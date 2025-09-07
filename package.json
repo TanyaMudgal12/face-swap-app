@@ -1,0 +1,37 @@
+{
+  "name": "face-swap-app",
+  "version": "1.0.0",
+  "description": "An easy-to-use web app that lets users submit their information and a photo, then creates fun face-swapped images. Users can view and download all submitted face swap results in one place.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TanyaMudgal12/face-swap-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TanyaMudgal12/face-swap-app/issues"
+  },
+  "homepage": "https://github.com/TanyaMudgal12/face-swap-app#readme",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "dotenv": "^17.2.2",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "mongodb": "^6.19.0",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/express": "^5.0.3",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^24.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Submissions</title>
+</head>
+<body>
+  <h1>All Submissions</h1>
+  <table border="1">
+    <thead>
+      <tr><th>Name</th><th>Email</th><th>Phone</th><th>Download Swapped Image</th></tr>
+    </thead>
+    <tbody>
+      <% submissions.forEach(submission => { %>
+        <tr>
+          <td><%= submission.name %></td>
+          <td><%= submission.email %></td>
+          <td><%= submission.phone %></td>
+          <td>
+            <a href="/submissions/<%= submission._id %>">Download</a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

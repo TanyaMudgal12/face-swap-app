@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Face Swap Form</title>
+  <style>
+    #cameraModal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7);
+      justify-content: center; align-items: center;
+    }
+    #cameraContainer {
+      background: white; padding: 20px; border-radius: 8px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    #cameraVideo { width: 300px; height: 250px; background: #333; }
+  </style>
+</head>
+<body>
+  <h1>Submit Your Details and Photo</h1>
+  <form action="/submit" method="POST" enctype="multipart/form-data">
+    <label>Name:</label> <input type="text" name="name" required minlength="4" maxlength="30" pattern="[A-Za-z\s]+" /><br/>
+    <label>Email:</label> <input type="email" name="email" required/><br/>
+    <label>Phone:</label> <input type="text" name="phone" required pattern="\d{10}" maxlength="10"/><br/>
+    <label> <input type="checkbox" name="terms" required/> Accept Terms & Conditions </label><br/>
+    <label>Choose photo source:</label>
+    <button type="button" onclick="openCamera('user')">Use Front Camera</button>
+    <button type="button" onclick="openCamera('environment')">Use Back Camera</button>
+    <br><br>
+    <!-- Camera Modal -->
+    <div id="cameraModal">
+      <div id="cameraContainer">
+        <video id="cameraVideo" autoplay></video>
+        <br>
+        <button type="button" onclick="capturePhoto()">Capture Photo</button>
+        <button type="button" onclick="closeCamera()">Cancel</button>
+      </div>
+    </div>
+    <!-- File uploader -->
+    Or upload image from device: <input type="file" id="fileInput" name="image" accept="image/png, image/jpeg, image/jpg"><br/>
+
+    <!-- Preview section; hidden initially -->
+    <div id="previewSection" style="display:none;">
+      <h2>Preview:</h2>
+      <img id="previewImg" src="" alt="Preview" style="width:200px;"/>
+    </div>
+    <!-- Hidden input to store captured image -->
+    <input type="hidden" name="cameraImage" id="cameraImage">
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+  <script>
+    let cameraStream;
+    let video = document.getElementById('cameraVideo');
+    let previewSection = document.getElementById('previewSection');
+    let previewImg = document.getElementById('previewImg');
+    let modal = document.getElementById('cameraModal');
+    function openCamera(facingMode) {
+      modal.style.display = 'flex';
+      navigator.mediaDevices.getUserMedia({ video: { facingMode } }).then(stream => {
+        cameraStream = stream;
+        video.srcObject = stream;
+      }).catch(err => alert('Camera access error: ' + err));
+    }
+    function closeCamera() {
+      modal.style.display = 'none';
+      if (cameraStream){
+        let tracks = cameraStream.getTracks();
+        tracks.forEach(t => t.stop());
+      }
+    }
+    function capturePhoto() {
+      let canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 300;
+      canvas.height = video.videoHeight || 250;
+      canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+      let imgData = canvas.toDataURL('image/png');
+      previewImg.src = imgData;
+      previewSection.style.display = 'block';
+      document.getElementById('cameraImage').value = imgData; // POST base64 to server if needed
+      closeCamera();
+    }
+    // Preview when selecting file
+    document.getElementById('fileInput').addEventListener('change', function(e){
+      const file = e.target.files[0];
+      if (file){
+        const reader = new FileReader();
+        reader.onload = function(ev){
+          previewImg.src = ev.target.result;
+          previewSection.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      } else {
+        previewSection.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
+
+
